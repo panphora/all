@@ -63,13 +63,13 @@ const createMethodHandler = (elements, plugins, methods) => ({
       };
     }
 
-    // Get first element's property to determine type
     const firstEl = elements[0];
     if (!firstEl) {
-      if (['style', 'classList', 'dataset'].includes(prop)) {
-        return createIntermediateProxy([], prop, plugins, methods);
-      }
-      return undefined;
+      // Return no-op proxy for any intermediate objects
+      return new Proxy({}, {
+        get: () => () => createElementProxy([], plugins, methods),
+        set: () => true
+      });
     }
 
     const value = firstEl[prop];
@@ -122,9 +122,13 @@ const createNestedPluginProxy = (elements, properties, plugins, methods) => {
 const createIntermediateProxy = (elements, propName, plugins, methods) => {
   return new Proxy({}, {
     get(target, prop) {
-      // Handle function properties (like classList.add)
       const firstEl = elements[0];
-      if (!firstEl) return undefined;
+      if (!firstEl) {
+        // Return function that does nothing and maintains chainability
+        return typeof prop === 'function' ? 
+          () => createElementProxy([], plugins, methods) : 
+          undefined;
+      }
 
       const value = firstEl[propName][prop];
       if (typeof value === 'function') {
@@ -134,7 +138,6 @@ const createIntermediateProxy = (elements, propName, plugins, methods) => {
         };
       }
 
-      // Return array of values for leaf properties
       return elements.map(el => el[propName][prop]);
     },
 
