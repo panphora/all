@@ -22,16 +22,13 @@ $.menu.classList.add('active').style.backgroundColor = 'blue';
 
 ```javascript
 // jQuery way
-$('.items').filter('[data-enabled]').each(function() {
-  $(this).addClass('active').hide().css('color', 'blue');
-});
+$('.items').filter('[data-enabled]').addClass('active').hide();
 
 // dollar - just like vanilla JS
 $.items
   .filter(el => el.dataset.enabled)
   .classList.add('active')
-  .style.display = 'none'
-  .style.color = 'blue';
+  .style.display = 'none';
 ```
 
 ## Smart Selections
@@ -134,13 +131,19 @@ $.menu.visible.show().onClick(e => console.log('clicked'));
 
 ## Installation
 
+npm
+
 ```bash
 npm install dollar
 ```
 
+umd (browser)
+
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@panphora/dollar@1.1.3/dist/dollar.umd.min.js"></script>
 ```
+
+esm (browser)
 
 ```html
 <script type="module">
@@ -156,6 +159,13 @@ Works in all modern browsers with ES6+ support. No polyfills needed, no legacy b
 
 - jQuery: 30KB minified + gzipped
 - dollar: 1KB minified + gzipped
+
+# How it's worse than jQuery
+
+- Less cross-browser normalization than jQuery
+- Native DOM can be more verbose than jQuery
+- No chaining after assignment
+- Fewer utility functions / no AJAX
 
 ## License
 
