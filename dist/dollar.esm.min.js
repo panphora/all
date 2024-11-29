@@ -1,5 +1,5 @@
 /*!
- * dollar v1.1.3
+ * dollar v1.1.4
  * (c) 2024 David Miranda
  * Released under the MIT License
  */
