@@ -1,5 +1,5 @@
 /*!
- * dollar v1.1.1
+ * dollar v1.1.2
  * (c) 2024 David Miranda
  * Released under the MIT License
  */
@@ -192,3 +192,4 @@ var $ = (() => {
   var dollar_default = $;
   return __toCommonJS(dollar_exports);
 })();
+window.$ = $.default;

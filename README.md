@@ -139,12 +139,12 @@ npm install dollar
 ```
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@panphora/dollar@1.1.2/dist/dollar.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@panphora/dollar@1.1.3/dist/dollar.umd.min.js"></script>
 ```
 
 ```html
 <script type="module">
-  import $ from 'https://cdn.jsdelivr.net/npm/@panphora/dollar@1.1.2/dist/dollar.esm.min.js';
+  import $ from 'https://cdn.jsdelivr.net/npm/@panphora/dollar@1.1.3/dist/dollar.esm.min.js';
 </script>
 ```
 

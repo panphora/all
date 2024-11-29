@@ -31,11 +31,14 @@ const builds = [
     outfile: 'dist/dollar.esm.min.js',
     minify: true,
   },
-  // UMD builds
+  // IIFE builds
   {
     ...baseConfig,
     format: 'iife',
     globalName: '$',
+    footer: {
+      js: 'window.$ = $.default;'  // Export the default export as window.$
+    },
     outfile: 'dist/dollar.umd.js',
     minify: false,
   },
@@ -43,6 +46,9 @@ const builds = [
     ...baseConfig,
     format: 'iife',
     globalName: '$',
+    footer: {
+      js: 'window.$ = $.default;'  // Export the default export as window.$
+    },
     outfile: 'dist/dollar.umd.min.js',
     minify: true,
   },
