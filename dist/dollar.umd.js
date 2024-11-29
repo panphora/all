@@ -3,7 +3,7 @@
  * (c) 2024 David Miranda
  * Released under the MIT License
  */
-var dollar = (() => {
+var $ = (() => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;

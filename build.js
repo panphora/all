@@ -35,14 +35,14 @@ const builds = [
   {
     ...baseConfig,
     format: 'iife',
-    globalName: 'dollar',
+    globalName: '$',
     outfile: 'dist/dollar.umd.js',
     minify: false,
   },
   {
     ...baseConfig,
     format: 'iife',
-    globalName: 'dollar',
+    globalName: '$',
     outfile: 'dist/dollar.umd.min.js',
     minify: true,
   },
