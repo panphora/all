@@ -12,10 +12,10 @@ $.menu.classList.add('active').style.backgroundColor = 'blue';
 
 ## Why dollar?
 
-- **Authentic DOM Methods**: Use `classList.add()` instead of `addClass()`, `style.backgroundColor` instead of `css()`
-- **Smart Selector**: Target elements with attributes (`<div menu>`) or classes (`.menu`) - matches both!
-- **Real Arrays**: Native `map`, `filter`, `forEach` without `.each()` or `.toArray()`
-- **Modern Chaining**: Proxies enable natural property access and method chaining
+- **Native DOM Methods**: Use `classList.add()` instead of `addClass()`, `style.backgroundColor` instead of `css()`
+- **Native Array Methods**: Native `map`, `filter`, `forEach` without `.each()` or `.toArray()`
+- **Method Chaining**: Proxies enable natural property access and method chaining
+- **Smart Selectors**: Target elements with attributes (`<div menu>`) or classes (`.menu`) - matches both!
 - **Zero Dependencies**: Tiny footprint using modern browser features
 
 ## Pure JavaScript Feel
@@ -31,7 +31,7 @@ $.items
   .style.display = 'none';
 ```
 
-## Smart Selector
+## Smart Selectors
 
 ```javascript
 // <div menu>Menu 1</div>
