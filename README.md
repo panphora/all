@@ -154,8 +154,8 @@ Works in all modern browsers with ES6+ support. No polyfills needed, no legacy b
 
 ## Size Comparison
 
-- jQuery: ~87KB minified
-- dollar: ~5KB minified
+- jQuery: 30KB minified + gzipped
+- dollar: 1KB minified + gzipped
 
 ## License
 
