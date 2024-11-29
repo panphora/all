@@ -1,5 +1,5 @@
 /*!
- * dollar v1.1.6
+ * dollar v1.2.0
  * (c) 2024 David Miranda
  * Released under the MIT License
  */
@@ -56,10 +56,10 @@ var createMethodHandler = (elements, plugins, methods) => ({
     }
     const firstEl = elements[0];
     if (!firstEl) {
-      if (["style", "classList", "dataset"].includes(prop)) {
-        return createIntermediateProxy([], prop, plugins, methods);
-      }
-      return void 0;
+      return new Proxy({}, {
+        get: () => () => createElementProxy([], plugins, methods),
+        set: () => true
+      });
     }
     const value = firstEl[prop];
     if (typeof value === "function") {
@@ -101,7 +101,9 @@ var createIntermediateProxy = (elements, propName, plugins, methods) => {
   return new Proxy({}, {
     get(target, prop) {
       const firstEl = elements[0];
-      if (!firstEl) return void 0;
+      if (!firstEl) {
+        return typeof prop === "function" ? () => createElementProxy([], plugins, methods) : void 0;
+      }
       const value = firstEl[propName][prop];
       if (typeof value === "function") {
         return (...args) => {
