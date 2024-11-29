@@ -98,7 +98,7 @@ const createMethodHandler = (elements, plugins, methods) => ({
 
   set(target, prop, value) {
     elements.forEach(el => {
-      el[prop] = value;
+      el[prop] = typeof value === 'function' ? value(el) : value;
     });
     return true;
   }
@@ -140,7 +140,7 @@ const createIntermediateProxy = (elements, propName, plugins, methods) => {
 
     set(target, prop, value) {
       elements.forEach(el => {
-        el[propName][prop] = value;
+        el[propName][prop] = typeof value === 'function' ? value(el) : value;
       });
       return true;
     }
