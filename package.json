@@ -1,0 +1,19 @@
+{
+  "name": "dollar",
+  "version": "1.0.0",
+  "description": "A modern DOM manipulation library that feels like native JavaScript",
+  "main": "$.js",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node build.js --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "jquery"
+  ],
+  "author": "David Miranda",
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}
