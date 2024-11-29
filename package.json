@@ -2,14 +2,31 @@
   "name": "dollar",
   "version": "1.0.0",
   "description": "A modern DOM manipulation library that feels like native JavaScript",
-  "main": "$.js",
+  "type": "module",
+  "main": "dist/dollar.umd.js",
+  "module": "dist/dollar.esm.js",
+  "unpkg": "dist/dollar.umd.min.js",
+  "jsdelivr": "dist/dollar.umd.min.js",
+  "exports": {
+    ".": {
+      "import": "./dist/dollar.esm.js",
+      "require": "./dist/dollar.umd.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "node build.js",
     "dev": "node build.js --watch",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
-    "jquery"
+    "jquery",
+    "dom",
+    "manipulation",
+    "selector",
+    "javascript"
   ],
   "author": "David Miranda",
   "license": "MIT",
