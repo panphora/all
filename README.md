@@ -7,7 +7,7 @@ A modern DOM manipulation library that feels like native JavaScript. Write clean
 $('.menu').addClass('active').css('background-color', 'blue');
 
 // dollar - use the actual DOM API
-all.menu.classList.add('active').style.backgroundColor = 'blue';
+$.menu.classList.add('active').style.backgroundColor = 'blue';
 ```
 
 ## Why dollar?
@@ -27,7 +27,7 @@ $('.items').filter('[data-enabled]').each(function() {
 });
 
 // dollar - just like vanilla JS
-all.items
+$.items
   .filter(el => el.dataset.enabled)
   .classList.add('active')
   .style.display = 'none'
@@ -41,23 +41,23 @@ all.items
 <div class="menu">Menu 2</div>
 
 // Select by attribute or class
-all.menu.classList.add('active');
+$.menu.classList.add('active');
 
 // Complex selectors work too
-all('header [nav] > .link');
+$('header [nav] > .link');
 ```
 
 ## Real Arrays, Real DOM
 
 ```javascript
-const visibleMenus = all.menu
+const visibleMenus = $.menu
   .filter(el => !el.classList.contains('hidden'))
   .map(el => el.textContent);
 
-const firstMenu = all.menu[0];
-const menuCount = all.menu.length;
+const firstMenu = $.menu[0];
+const menuCount = $.menu.length;
 
-for (const el of all.menu) {
+for (const el of $.menu) {
   console.log(el);
 }
 ```
@@ -73,7 +73,7 @@ $('.menu').on('click', function(e) {
 });
 
 // dollar
-all.menu
+$.menu
   .onClick(e => e.target.classList.add('clicked'))
   .onMouseenter(e => e.target.classList.add('hover'));
 ```
@@ -82,17 +82,17 @@ all.menu
 
 ```html
 <!-- Toggle panels with one line -->
-<button onclick="all.panel.classList.toggle('active')">Toggle All Panels</button>
+<button onclick="$.panel.classList.toggle('active')">Toggle All Panels</button>
 
 <!-- Live search filtering -->
 <input 
   type="search" 
-  oninput="all.item.style.display = this.value ? 
-    all.item.filter(el => el.textContent.includes(this.value)).style.display = '' : ''"
+  oninput="$.item.style.display = this.value ? 
+    $.item.filter(el => el.textContent.includes(this.value)).style.display = '' : ''"
 >
 
 <!-- Form submission with validation -->
-<form onsubmit="return all(this, '[required]').filter(el => !el.value).classList.add('error').length === 0">
+<form onsubmit="return $(this, '[required]').filter(el => !el.value).classList.add('error').length === 0">
   <input required>
   <input required>
   <button>Submit</button>
@@ -100,7 +100,7 @@ all.menu
 
 <!-- Dynamic updates -->
 <div>
-  <select onchange="all(this.parentElement, '[prices]').textContent = `$${this.value}`">
+  <select onchange="$(this.parentElement, '[prices]').textContent = `$${this.value}`">
     <option value="10">Basic</option>
     <option value="20">Pro</option>
   </select>
@@ -126,10 +126,10 @@ const visibilityPlugin = {
 };
 
 // Use plugin
-all.use(visibilityPlugin);
+$.use(visibilityPlugin);
 
 // Natural usage
-all.menu.visible.show().onClick(e => console.log('clicked'));
+$.menu.visible.show().onClick(e => console.log('clicked'));
 ```
 
 ## Installation
@@ -139,12 +139,12 @@ npm install dollar
 ```
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@panphora/dollar@1.1.1/dist/dollar.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@panphora/dollar@1.1.2/dist/dollar.umd.min.js"></script>
 ```
 
 ```html
 <script type="module">
-  import $ from 'https://cdn.jsdelivr.net/npm/@panphora/dollar@1.1.1/dist/dollar.esm.min.js';
+  import $ from 'https://cdn.jsdelivr.net/npm/@panphora/dollar@1.1.2/dist/dollar.esm.min.js';
 </script>
 ```
 
