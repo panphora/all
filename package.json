@@ -1,6 +1,6 @@
 {
   "name": "@panphora/dollar",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "A modern DOM manipulation library that feels like native JavaScript",
   "type": "module",
   "main": "dist/dollar.umd.js",

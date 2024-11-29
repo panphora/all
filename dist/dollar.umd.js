@@ -1,5 +1,5 @@
 /*!
- * dollar v1.1.5
+ * dollar v1.1.6
  * (c) 2024 David Miranda
  * Released under the MIT License
  */
@@ -100,7 +100,7 @@ var $ = (() => {
     },
     set(target, prop, value) {
       elements.forEach((el) => {
-        el[prop] = value;
+        el[prop] = typeof value === "function" ? value(el) : value;
       });
       return true;
     }
@@ -135,7 +135,7 @@ var $ = (() => {
       },
       set(target, prop, value) {
         elements.forEach((el) => {
-          el[propName][prop] = value;
+          el[propName][prop] = typeof value === "function" ? value(el) : value;
         });
         return true;
       }
