@@ -160,5 +160,3 @@ Works in all modern browsers with ES6+ support. No polyfills needed, no legacy b
 ## License
 
 MIT
-
-Want to modernize your DOM manipulation? Try dollar today!
