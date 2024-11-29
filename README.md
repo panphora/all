@@ -138,6 +138,16 @@ all.menu.visible.show().onClick(e => console.log('clicked'));
 npm install dollar
 ```
 
+```html
+<script src="https://cdn.jsdelivr.net/npm/@panphora/dollar/dist/dollar.umd.min.js"></script>
+```
+
+```html
+<script type="module">
+  import $ from 'https://cdn.jsdelivr.net/npm/@panphora/dollar/dist/dollar.esm.min.js';
+</script>
+```
+
 ## Browser Support
 
 Works in all modern browsers with ES6+ support. No polyfills needed, no legacy baggage.

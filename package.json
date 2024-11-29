@@ -1,5 +1,5 @@
 {
-  "name": "dollar",
+  "name": "@panphora/dollar",
   "version": "1.0.0",
   "description": "A modern DOM manipulation library that feels like native JavaScript",
   "type": "module",
