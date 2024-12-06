@@ -29,11 +29,44 @@ const createMethodHandler = (elements, plugins, methods) => ({
       };
     }
 
-    // Handle event listeners
+    // Handle event listeners and support event delegation
     if (prop.startsWith('on')) {
-      return (handler) => {
+      return (selectorOrHandlerOrObject, optionalHandler) => {
         const eventName = prop.slice(2);
-        elements.forEach(el => el.addEventListener(eventName, handler));
+        
+        // Handle object of bindings
+        if (selectorOrHandlerOrObject && typeof selectorOrHandlerOrObject === 'object') {
+          Object.entries(selectorOrHandlerOrObject).forEach(([selector, handler]) => {
+            elements.forEach(el => {
+              el.addEventListener(eventName, (e) => {
+                const closest = e.target.closest(selector);
+                if (closest && el.contains(closest)) {
+                  handler.call(closest, e);
+                }
+              });
+            });
+          });
+          return createElementProxy(elements, plugins, methods);
+        }
+        
+        // Handle single binding (existing delegation code)
+        if (optionalHandler) {
+          const selector = selectorOrHandlerOrObject;
+          const handler = optionalHandler;
+          
+          elements.forEach(el => {
+            el.addEventListener(eventName, (e) => {
+              const closest = e.target.closest(selector);
+              if (closest && el.contains(closest)) {
+                handler.call(closest, e);
+              }
+            });
+          });
+        } else {
+          const handler = selectorOrHandlerOrObject;
+          elements.forEach(el => el.addEventListener(eventName, handler));
+        }
+        
         return createElementProxy(elements, plugins, methods);
       };
     }
@@ -63,26 +96,51 @@ const createMethodHandler = (elements, plugins, methods) => ({
       };
     }
 
+    // Get first element's property to determine type
     const firstEl = elements[0];
     if (!firstEl) {
-      // Return no-op proxy for any intermediate objects
-      return new Proxy({}, {
-        get: () => () => createElementProxy([], plugins, methods),
-        set: () => true
-      });
+      if (['style', 'classList', 'dataset'].includes(prop)) {
+        return createIntermediateProxy([], prop, plugins, methods);
+      }
+      return undefined;
     }
 
     const value = firstEl[prop];
     
-    // Handle functions
+    // The library is designed to handle chaining correctly
+    // - When a method returns an Element (like cloneNode), it wraps it in a proxy
+    // - When a method returns undefined (like removeAttribute), it chains on the original elements
+    // - For other return values, like strings, it returns the results in an array
+    // We also handle passing in a $-wrapped proxy object as an argument and loop over all elements in it
     if (typeof value === 'function') {
       return (...args) => {
-        const results = elements.map(el => el[prop](...args));
-        // Return the original proxy for chainable methods
+        // Unwrap any proxy arguments
+        const unwrappedArgs = args.map(arg => {
+          if (arg && arg.constructor === Proxy) {
+            // If it's our proxy, return all its elements
+            return Array.from(arg);
+          }
+          return arg;
+        });
+
+        const results = elements.map(el => {
+          // For each element in our proxy, call the method with each element from any proxy arguments
+          const elementResults = unwrappedArgs.map(arg => {
+            if (Array.isArray(arg)) {
+              // If the argument was a proxy (now unwrapped to array), call method for each element
+              return arg.map(proxyEl => el[prop](proxyEl));
+            }
+            return [el[prop](arg)];
+          }).flat();
+          return elementResults[elementResults.length - 1]; // Return last result
+        });
+
+        if (results[0] instanceof Element) {
+          return createElementProxy(results.filter(Boolean), plugins, methods);
+        }
         if (results[0] === undefined) {
           return createElementProxy(elements, plugins, methods);
         }
-        // Return results for value-returning methods
         return results;
       };
     }
@@ -98,7 +156,7 @@ const createMethodHandler = (elements, plugins, methods) => ({
 
   set(target, prop, value) {
     elements.forEach(el => {
-      el[prop] = typeof value === 'function' ? value(el) : value;
+      el[prop] = value;
     });
     return true;
   }
@@ -122,13 +180,9 @@ const createNestedPluginProxy = (elements, properties, plugins, methods) => {
 const createIntermediateProxy = (elements, propName, plugins, methods) => {
   return new Proxy({}, {
     get(target, prop) {
+      // Handle function properties (like classList.add)
       const firstEl = elements[0];
-      if (!firstEl) {
-        // Return function that does nothing and maintains chainability
-        return typeof prop === 'function' ? 
-          () => createElementProxy([], plugins, methods) : 
-          undefined;
-      }
+      if (!firstEl) return undefined;
 
       const value = firstEl[propName][prop];
       if (typeof value === 'function') {
@@ -138,12 +192,13 @@ const createIntermediateProxy = (elements, propName, plugins, methods) => {
         };
       }
 
+      // Return array of values for leaf properties
       return elements.map(el => el[propName][prop]);
     },
 
     set(target, prop, value) {
       elements.forEach(el => {
-        el[propName][prop] = typeof value === 'function' ? value(el) : value;
+        el[propName][prop] = value;
       });
       return true;
     }
@@ -159,33 +214,80 @@ const createElementProxy = (elements, plugins = sharedState.plugins, methods = s
   return new Proxy(elements, createMethodHandler(elements, plugins, methods));
 };
 
-const $ = new Proxy(function(contextOrSelector, selector) {
-  // If only one argument, use the original behavior
-  if (arguments.length === 1 && typeof contextOrSelector === 'string') {
-    return createElementProxy(Array.from(document.querySelectorAll(contextOrSelector)));
+const toElementArray = (input) => {
+  if (input instanceof Element || input instanceof Document) {
+    return [input];
+  }
+  if (Array.isArray(input)) {
+    if (input.every(el => el instanceof Element || el instanceof Document)) {
+      return input;
+    }
+    throw new TypeError('All array elements must be DOM Elements or Document');
+  }
+  if (typeof input === 'string') {
+    return Array.from(document.querySelectorAll(input));
+  }
+  throw new TypeError('Input must be a selector string, Element, Document, or Array of Elements');
+};
+
+// Default plugins
+const defaultPlugins = {
+  methods: {
+    eq(index) {
+      if (typeof index !== 'number') {
+        throw new TypeError('eq() requires a number as an argument');
+      }
+      
+      // Handle negative indices (counting from the end)
+      const normalizedIndex = index < 0 ? this.length + index : index;
+      
+      // Return array with single element at index, or empty array if index is invalid
+      return this[normalizedIndex] ? [this[normalizedIndex]] : [];
+    },
+
+    prop(properties) {
+      if (typeof properties !== 'object' || properties === null) {
+        throw new TypeError('prop() requires an object of properties');
+      }
+      
+      Object.entries(properties).forEach(([key, value]) => {
+        this.forEach(el => {
+          el[key] = value;
+        });
+      });
+      
+      return this;
+    },
+    
+    css(styles) {
+      if (typeof styles !== 'object' || styles === null) {
+        throw new TypeError('css() requires an object of styles');
+      }
+      
+      Object.entries(styles).forEach(([property, value]) => {
+        this.forEach(el => {
+          el.style[property] = value;
+        });
+      });
+      
+      return this;
+    }
+  }
+};
+
+const $ = new Proxy(function(selectorOrElements, contextSelector) {
+  // First normalize the elements from the first argument
+  let elements = toElementArray(selectorOrElements);
+  
+  // If there's a context selector, filter the elements by it
+  if (arguments.length === 2) {
+    if (typeof contextSelector !== 'string') {
+      throw new TypeError('Context selector must be a string');
+    }
+    elements = elements.filter(el => el.matches?.(contextSelector));
   }
   
-  // Handle context + selector case
-  if (arguments.length === 2) {
-    if (!(contextOrSelector instanceof Element)) {
-      throw new TypeError('Context must be an Element');
-    }
-    if (typeof selector !== 'string') {
-      throw new TypeError('Selector must be a string');
-    }
-
-    // Check if the context element itself matches the selector
-    const matches = [];
-    if (contextOrSelector.matches(selector)) {
-      matches.push(contextOrSelector);
-    }
-
-    // Get matching children
-    const children = contextOrSelector.querySelectorAll(selector);
-    return createElementProxy([...matches, ...children]);
-  }
-
-  throw new TypeError('Invalid arguments. Use $(selector) or $(context, selector)');
+  return createElementProxy(elements);
 }, {
   get(target, prop) {
     if (prop === 'use') {
@@ -210,5 +312,8 @@ const $ = new Proxy(function(contextOrSelector, selector) {
     return createElementProxy(elements);
   }
 });
+
+// Install default plugins
+$.use(defaultPlugins);
 
 export default $;

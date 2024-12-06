@@ -14,7 +14,7 @@ $.menu.classList.add('active').style.backgroundColor = 'blue';
 
 - **Native DOM Methods**: Use `classList.add()` instead of `addClass()`, `style.backgroundColor` instead of `css()`
 - **Native Array Methods**: Native `map`, `filter`, `forEach` without `.each()` or `.toArray()`
-- **Method Chaining**: Proxies enable natural property access and method chaining
+- **Method Chaining**: Proxies enable natural property access and method chaining, including with native DOM methods that return elements
 - **Smart Selectors**: Target elements with attributes (`<div menu>`) or classes (`.menu`) - matches both!
 - **Zero Dependencies**: Tiny footprint using modern browser features
 
@@ -66,6 +66,21 @@ for (const el of $.menu) {
 }
 ```
 
+## Native DOM Method Chaining
+
+```javascript
+// Chain methods that return elements
+$.menu
+  .querySelector('.submenu')   // Returns element
+  .cloneNode(true)            // Returns cloned element
+  .classList.add('copy');     // Continues chaining
+
+// Chain with dollar objects
+const menu = $.menu;
+$.main.appendChild(menu);     // Accepts dollar objects directly
+$.sidebar.prepend($.nav);     // Works with all insertion methods
+```
+
 ## Function Property Assignment
 
 Pass a function to any property to run it on each element. The function receives the element as its argument and its return value is assigned to the property.
@@ -107,11 +122,46 @@ $('.menu').on('click', function(e) {
 
 // dollar
 $.menu
-  .onClick(e => e.target.classList.add('clicked'))
-  .onMouseenter(e => e.target.classList.add('hover'));
+  .onclick(e => e.target.classList.add('clicked'))
+  .onmouseenter(e => e.target.classList.add('hover'));
 ```
 
-Here's a more detailed and better documented version of the Inline Handlers section:
+## Event Delegation
+
+```javascript
+// Delegate clicks on .button elements within .menu
+$.menu.onclick('.button', e => {
+  console.log('Button clicked', e.target);
+});
+
+// Multiple delegated handlers with object syntax
+$.menu.onclick({
+  '.button': e => console.log('Button clicked'),
+  '.link': e => console.log('Link clicked')
+});
+```
+
+## Built-in Plugins
+
+dollar includes several default plugins for common operations:
+
+```javascript
+// Element selection
+$.menu.eq(0)           // Get first menu element
+$.menu.eq(-1)          // Get last menu element
+
+// Bulk property setting
+$.button.prop({
+  disabled: true,
+  type: 'submit'
+})
+
+// jQuery-style CSS
+$.item.css({
+  backgroundColor: 'blue',
+  marginTop: '10px'
+})
+```
 
 ## Perfect for Inline Handlers
 
@@ -248,7 +298,44 @@ const visibilityPlugin = {
 $.use(visibilityPlugin);
 
 // Natural usage
-$.menu.visible.show().onClick(e => console.log('clicked'));
+$.menu.visible.show().onclick(e => console.log('clicked'));
+```
+
+## Advanced Chaining
+
+dollar intelligently handles method return values:
+- Methods returning Elements (like `cloneNode`) → Continue chaining
+- Methods returning undefined (like `removeAttribute`) → Continue chaining
+- Methods returning other values (like `getAttribute`) → Return value array
+
+```javascript
+// Methods returning Elements chain automatically
+$.menu
+  .cloneNode(true)      // Returns Element
+  .classList.add('copy');
+
+// Methods returning undefined continue the chain
+$.button
+  .removeAttribute('disabled')  // Returns undefined
+  .classList.add('active');     // Chaining continues
+
+// Get actual return values when needed
+const ids = $.item.map(el => el.id);
+const hasClass = $.menu.classList.contains('active');
+```
+
+## Working with dollar Objects
+
+dollar objects can be used as arguments to DOM methods:
+
+```javascript
+// Pass dollar objects directly to DOM methods
+$.main.appendChild($.sidebar);
+$.nav.insertBefore($.header, $.main);
+
+// Works with any method accepting Elements
+$.menu.replaceWith($.nav);
+$.section.after($.footer);
 ```
 
 ## Installation
@@ -262,14 +349,14 @@ npm install dollar
 umd (browser)
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@panphora/dollar@1.1.3/dist/dollar.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@panphora/dollar@1.3.0/dist/dollar.umd.min.js"></script>
 ```
 
 esm (browser)
 
 ```html
 <script type="module">
-  import $ from 'https://cdn.jsdelivr.net/npm/@panphora/dollar@1.1.3/dist/dollar.esm.min.js';
+  import $ from 'https://cdn.jsdelivr.net/npm/@panphora/dollar@1.3.0/dist/dollar.esm.min.js';
 </script>
 ```
 
@@ -302,8 +389,8 @@ $.item
 // 4. Event Handling
 // Simple event binding with automatic 'this' handling
 $.button
-  .onClick(e => e.target.classList.add('clicked'))
-  .onMouseenter(e => e.target.classList.add('hover'))
+  .onclick(e => e.target.classList.add('clicked'))
+  .onmouseenter(e => e.target.classList.add('hover'))
 
 // 5. Context Selection
 // Search within specific elements
@@ -312,7 +399,7 @@ $(menuElement, 'button')  // buttons inside menu element
 
 // 6. Working with Forms
 $('form')
-  .onSubmit(e => {
+  .onsubmit(e => {
     e.preventDefault()
     const data = new FormData(e.target)
     console.log(Object.fromEntries(data))
@@ -382,7 +469,7 @@ Works in all modern browsers with ES6+ support. No polyfills needed, no legacy b
 - jQuery: 30KB minified + gzipped
 - dollar: 1KB minified + gzipped
 
-# How it's worse than jQuery
+## How it's worse than jQuery
 
 - Less cross-browser normalization than jQuery
 - Native DOM can be more verbose than jQuery
