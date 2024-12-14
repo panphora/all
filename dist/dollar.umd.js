@@ -124,7 +124,7 @@ var $ = (() => {
               if (Array.isArray(arg)) {
                 return arg.map((proxyEl) => el[prop](proxyEl));
               }
-              return [el[prop](arg)];
+              return [el[prop](...args)];
             }).flat();
             return elementResults[elementResults.length - 1];
           });
