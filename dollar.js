@@ -279,12 +279,15 @@ const $ = new Proxy(function(selectorOrElements, contextSelector) {
   // First normalize the elements from the first argument
   let elements = toElementArray(selectorOrElements);
   
-  // If there's a context selector, filter the elements by it
+  // If there's a context selector, filter by matching elements and their descendants
   if (arguments.length === 2) {
     if (typeof contextSelector !== 'string') {
       throw new TypeError('Context selector must be a string');
     }
-    elements = elements.filter(el => el.matches?.(contextSelector));
+    elements = elements.flatMap(el => [
+      ...(el.matches?.(contextSelector) ? [el] : []),
+      ...Array.from(el.querySelectorAll(contextSelector))
+    ]);
   }
   
   return createElementProxy(elements);
