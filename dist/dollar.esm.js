@@ -1,5 +1,5 @@
 /*!
- * dollar v1.3.0
+ * dollar v1.4.1
  * (c) 2024 David Miranda
  * Released under the MIT License
  */
@@ -224,9 +224,12 @@ var $ = new Proxy(function(selectorOrElements, contextSelector) {
     if (typeof contextSelector !== "string") {
       throw new TypeError("Context selector must be a string");
     }
-    elements = elements.filter((el) => {
+    elements = elements.flatMap((el) => {
       var _a;
-      return (_a = el.matches) == null ? void 0 : _a.call(el, contextSelector);
+      return [
+        ...((_a = el.matches) == null ? void 0 : _a.call(el, contextSelector)) ? [el] : [],
+        ...Array.from(el.querySelectorAll(contextSelector))
+      ];
     });
   }
   return createElementProxy(elements);
