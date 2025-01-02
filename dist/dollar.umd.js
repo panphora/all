@@ -1,6 +1,6 @@
 /*!
  * dollar v1.4.2
- * (c) 2024 David Miranda
+ * (c) 2025 David Miranda
  * Released under the MIT License
  */
 var $ = (() => {
@@ -120,13 +120,18 @@ var $ = (() => {
             return arg;
           });
           const results = elements.map((el) => {
-            const elementResults = unwrappedArgs.map((arg) => {
-              if (Array.isArray(arg)) {
-                return arg.map((proxyEl) => el[prop](proxyEl));
-              }
-              return [el[prop](...args)];
-            }).flat();
-            return elementResults[elementResults.length - 1];
+            const hasProxyArgs = unwrappedArgs.some(Array.isArray);
+            if (hasProxyArgs) {
+              const elementResults = unwrappedArgs.map((arg) => {
+                if (Array.isArray(arg)) {
+                  return arg.map((proxyEl) => el[prop](proxyEl));
+                }
+                return [el[prop](...args)];
+              }).flat();
+              return elementResults[elementResults.length - 1];
+            } else {
+              return el[prop](...args);
+            }
           });
           if (results[0] instanceof Element) {
             return createElementProxy(results.filter(Boolean), plugins, methods);

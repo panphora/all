@@ -62,6 +62,12 @@
       document.getElementById('results').appendChild(div);
     };
 
+    const originalHTML = document.getElementById('test-elements').innerHTML;
+
+    const resetTestElements = () => {
+      document.getElementById('test-elements').innerHTML = originalHTML;
+    };
+
     // Original test groups remain the same
     const testBasicSelection = async () => {
       await test('Select by attribute', () => {
@@ -200,6 +206,16 @@
       await test('getAttribute works', () => {
         const values = $.menu.getAttribute('data-test');
         assert(Array.isArray(values) && values[0] === 'value', 'getAttribute should return array of values');
+      });
+
+      await test('insertAdjacentHTML with multiple arguments works', () => {
+        $.menu
+          .insertAdjacentHTML('beforeend', '<span>test-content</span>');
+        
+        assert(
+          $.menu[0].lastElementChild.textContent === 'test-content',
+          'insertAdjacentHTML should work with position and content arguments'
+        );
       });
     };
 
@@ -443,15 +459,35 @@
       
       log('🏃 Running Tests...', 'pass');
       
+      // Reset before each test group
+      resetTestElements();
       await testBasicSelection();
+      
+      resetTestElements();
       await testArrayOperations();
+      
+      resetTestElements();
       await testDOMOperations();
+      
+      resetTestElements();
       await testPluginSystem();
+      
+      resetTestElements();
       await testMethodChaining();
+      
+      resetTestElements();
       await testEventHandling();
+      
+      resetTestElements();
       await testEmptyCollections();
+      
+      resetTestElements();
       await testPropertyAccess();
+      
+      resetTestElements();
       await testPluginEdgeCases();
+      
+      resetTestElements();
       await testMethodReturns();
       
       log('✨ Tests Complete', 'pass');

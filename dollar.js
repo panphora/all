@@ -112,38 +112,45 @@ const createMethodHandler = (elements, plugins, methods) => ({
     // - When a method returns undefined (like removeAttribute), it chains on the original elements
     // - For other return values, like strings, it returns the results in an array
     // We also handle passing in a $-wrapped proxy object as an argument and loop over all elements in it
-    if (typeof value === 'function') {
-      return (...args) => {
-        // Unwrap any proxy arguments
-        const unwrappedArgs = args.map(arg => {
-          if (arg && arg.constructor === Proxy) {
-            // If it's our proxy, return all its elements
-            return Array.from(arg);
+// In the method handler's get function, replace the function call handling with:
+if (typeof value === 'function') {
+  return (...args) => {
+    // Unwrap any proxy arguments
+    const unwrappedArgs = args.map(arg => {
+      if (arg && arg.constructor === Proxy) {
+        return Array.from(arg);
+      }
+      return arg;
+    });
+
+    const results = elements.map(el => {
+      // Check if any of the unwrapped arguments are arrays (from proxies)
+      const hasProxyArgs = unwrappedArgs.some(Array.isArray);
+      
+      if (hasProxyArgs) {
+        // Handle proxy arguments case
+        const elementResults = unwrappedArgs.map(arg => {
+          if (Array.isArray(arg)) {
+            return arg.map(proxyEl => el[prop](proxyEl));
           }
-          return arg;
-        });
+          return [el[prop](...args)];
+        }).flat();
+        return elementResults[elementResults.length - 1];
+      } else {
+        // Simple case - just call the method once with original arguments
+        return el[prop](...args);
+      }
+    });
 
-        const results = elements.map(el => {
-          // For each element in our proxy, call the method with each element from any proxy arguments
-          const elementResults = unwrappedArgs.map(arg => {
-            if (Array.isArray(arg)) {
-              // If the argument was a proxy (now unwrapped to array), call method for each element
-              return arg.map(proxyEl => el[prop](proxyEl));
-            }
-            return [el[prop](...args)];
-          }).flat();
-          return elementResults[elementResults.length - 1]; // Return last result
-        });
-
-        if (results[0] instanceof Element) {
-          return createElementProxy(results.filter(Boolean), plugins, methods);
-        }
-        if (results[0] === undefined) {
-          return createElementProxy(elements, plugins, methods);
-        }
-        return results;
-      };
+    if (results[0] instanceof Element) {
+      return createElementProxy(results.filter(Boolean), plugins, methods);
     }
+    if (results[0] === undefined) {
+      return createElementProxy(elements, plugins, methods);
+    }
+    return results;
+  };
+}
 
     // Handle intermediate objects (style, classList, dataset)
     if (['style', 'classList', 'dataset'].includes(prop)) {

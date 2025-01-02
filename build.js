@@ -1,4 +1,3 @@
-// build.js
 import * as esbuild from 'esbuild';
 import pkg from './package.json' assert { type: 'json' };
 
@@ -54,20 +53,22 @@ const builds = [
   },
 ];
 
-// Run all builds
-Promise.all(builds.map(config => esbuild.build(config)))
-  .then(() => console.log('⚡ Build complete!'))
-  .catch(() => process.exit(1));
-
 // Watch mode (development)
 if (process.argv.includes('--watch')) {
-  const ctx = await esbuild.context({
-    ...baseConfig,
-    format: 'esm',
-    outfile: 'dist/dollar.esm.js',
-    minify: false,
-  });
-
-  await ctx.watch();
   console.log('👀 Watching for changes...');
+  
+  // Create watch contexts for all builds
+  const contexts = await Promise.all(
+    builds.map(config => esbuild.context(config))
+  );
+  
+  // Start watching all contexts
+  await Promise.all(
+    contexts.map(ctx => ctx.watch())
+  );
+} else {
+  // One-time build mode
+  Promise.all(builds.map(config => esbuild.build(config)))
+    .then(() => console.log('⚡ Build complete!'))
+    .catch(() => process.exit(1));
 }
