@@ -2,6 +2,7 @@
   "name": "@panphora/dollar",
   "version": "1.4.3",
   "description": "A modern DOM manipulation library that feels like native JavaScript",
+  "homepage": "https://github.com/panphora/dollar",
   "type": "module",
   "main": "dist/dollar.umd.js",
   "module": "dist/dollar.esm.js",

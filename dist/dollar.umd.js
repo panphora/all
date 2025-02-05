@@ -105,6 +105,10 @@ var $ = (() => {
       }
       const firstEl = elements[0];
       if (!firstEl) {
+        const candidateMethod = Element.prototype[prop] || Node.prototype[prop];
+        if (typeof candidateMethod === "function") {
+          return (...args) => createElementProxy([], plugins, methods);
+        }
         if (["style", "classList", "dataset"].includes(prop)) {
           return createIntermediateProxy([], prop, plugins, methods);
         }

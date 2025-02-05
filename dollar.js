@@ -99,6 +99,11 @@ const createMethodHandler = (elements, plugins, methods) => ({
     // Get first element's property to determine type
     const firstEl = elements[0];
     if (!firstEl) {
+      // If the property is a known DOM method, return a no-op function for chaining.
+      const candidateMethod = Element.prototype[prop] || Node.prototype[prop];
+      if (typeof candidateMethod === 'function') {
+        return (...args) => createElementProxy([], plugins, methods);
+      }
       if (['style', 'classList', 'dataset'].includes(prop)) {
         return createIntermediateProxy([], prop, plugins, methods);
       }

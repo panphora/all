@@ -383,6 +383,13 @@
         const result = empty.filter(() => true).map(x => x).style.color = 'red';
         assert(empty.length === 0, 'Should safely chain on empty collection');
       });
+
+      await test('Empty collection DOM method call no-ops', () => {
+        const empty = $('nonexistent');
+        // Calling a DOM method (replaceWith) on an empty collection should be a no-op
+        const result = empty.replaceWith(document.createElement('div'));
+        assert(result.length === 0, 'Calling replaceWith on an empty collection should return an empty collection');
+      });
     };
 
     const testPropertyAccess = async () => {
