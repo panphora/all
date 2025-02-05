@@ -349,14 +349,14 @@ npm install dollar
 umd (browser)
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@panphora/dollar@1.4.3/dist/dollar.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@panphora/dollar@1.5.0/dist/dollar.umd.min.js"></script>
 ```
 
 esm (browser)
 
 ```html
 <script type="module">
-  import $ from 'https://cdn.jsdelivr.net/npm/@panphora/dollar@1.4.3/dist/dollar.esm.min.js';
+  import $ from 'https://cdn.jsdelivr.net/npm/@panphora/dollar@1.5.0/dist/dollar.esm.min.js';
 </script>
 ```
 
