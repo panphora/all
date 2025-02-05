@@ -1,6 +1,6 @@
 {
   "name": "@panphora/dollar",
-  "version": "1.4.3",
+  "version": "1.5.0",
   "description": "A modern DOM manipulation library that feels like native JavaScript",
   "homepage": "https://github.com/panphora/dollar",
   "type": "module",
