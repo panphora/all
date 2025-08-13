@@ -1,5 +1,5 @@
 /*!
- * All.js v1.6.0
+ * All.js v1.6.1
  * (c) 2025 David Miranda
  * Released under the MIT License
  */
@@ -105,12 +105,15 @@ var All = (() => {
       }
       const firstEl = elements[0];
       if (!firstEl) {
-        const candidateMethod = Element.prototype[prop] || Node.prototype[prop];
-        if (typeof candidateMethod === "function") {
-          return (...args) => createElementProxy([], plugins, methods);
-        }
         if (["style", "classList", "dataset"].includes(prop)) {
           return createIntermediateProxy([], prop, plugins, methods);
+        }
+        const descriptor = Object.getOwnPropertyDescriptor(Element.prototype, prop) || Object.getOwnPropertyDescriptor(Node.prototype, prop);
+        if (descriptor == null ? void 0 : descriptor.get) {
+          return createIntermediateProxy([], prop, plugins, methods);
+        }
+        if (typeof (descriptor == null ? void 0 : descriptor.value) === "function") {
+          return (...args) => createElementProxy([], plugins, methods);
         }
         return void 0;
       }
@@ -176,7 +179,9 @@ var All = (() => {
     return new Proxy({}, {
       get(target, prop) {
         const firstEl = elements[0];
-        if (!firstEl) return void 0;
+        if (!firstEl) {
+          return (...args) => createElementProxy(elements, plugins, methods);
+        }
         const value = firstEl[propName][prop];
         if (typeof value === "function") {
           return (...args) => {

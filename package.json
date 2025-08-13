@@ -1,6 +1,6 @@
 {
   "name": "alldom",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "A modern DOM manipulation library that selects all elements naturally with native JavaScript feel",
   "homepage": "https://github.com/panphora/all",
   "type": "module",

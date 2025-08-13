@@ -349,14 +349,14 @@ npm install alldom
 umd (browser)
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/alldom@1.6.0/dist/all.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alldom@1.6.1/dist/all.umd.min.js"></script>
 ```
 
 esm (browser)
 
 ```html
 <script type="module">
-  import All from 'https://cdn.jsdelivr.net/npm/alldom@1.6.0/dist/all.esm.min.js';
+  import All from 'https://cdn.jsdelivr.net/npm/alldom@1.6.1/dist/all.esm.min.js';
 </script>
 ```
 
