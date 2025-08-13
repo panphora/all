@@ -1,10 +1,10 @@
 /*!
- * dollar v1.5.0
+ * all.js v1.5.0
  * (c) 2025 David Miranda
  * Released under the MIT License
  */
 
-// dollar.js
+// all.js
 var createMethodHandler = (elements, plugins, methods) => ({
   get(target, prop) {
     if (prop === "length") return elements.length;
@@ -203,6 +203,13 @@ var defaultPlugins = {
       const normalizedIndex = index < 0 ? this.length + index : index;
       return this[normalizedIndex] ? [this[normalizedIndex]] : [];
     },
+    at(index) {
+      if (typeof index !== "number") {
+        throw new TypeError("at() requires a number as an argument");
+      }
+      const normalizedIndex = index < 0 ? this.length + index : index;
+      return this[normalizedIndex];
+    },
     prop(properties) {
       if (typeof properties !== "object" || properties === null) {
         throw new TypeError("prop() requires an object of properties");
@@ -227,7 +234,7 @@ var defaultPlugins = {
     }
   }
 };
-var $ = new Proxy(function(selectorOrElements, contextSelector) {
+var all = new Proxy(function(selectorOrElements, contextSelector) {
   let elements = toElementArray(selectorOrElements);
   if (arguments.length === 2) {
     if (typeof contextSelector !== "string") {
@@ -264,8 +271,8 @@ var $ = new Proxy(function(selectorOrElements, contextSelector) {
     return createElementProxy(elements);
   }
 });
-$.use(defaultPlugins);
-var dollar_default = $;
+all.use(defaultPlugins);
+var all_default = all;
 export {
-  dollar_default as default
+  all_default as default
 };

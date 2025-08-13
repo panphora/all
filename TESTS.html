@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>dollar tests</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22white%22>$</text></svg>">
+  <title>all.js tests</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22white%22>all</text></svg>">
   <style>
     .test-result { padding: 8px; margin: 4px 0; }
     .pass { background: #e6ffe6; }
@@ -10,7 +10,7 @@
     .test-group { margin: 20px 0; }
     .hidden { display: none; }
   </style>
-  <script src="dist/dollar.umd.min.js"></script>
+  <script src="dist/all.umd.min.js"></script>
 </head>
 <body>
   <!-- Test Elements -->
@@ -38,7 +38,7 @@
     </form>
   </div>
 
-  <h1>$.js Test Suite</h1>
+  <h1>all.js Test Suite</h1>
   <div id="results"></div>
 
   <script type="module">
@@ -72,42 +72,42 @@
     // Original test groups remain the same
     const testBasicSelection = async () => {
       await test('Select by attribute', () => {
-        const menus = $.menu;
+        const menus = all.menu;
         assert(menus.length === 3, 'Should find both attribute and class');
       });
 
       await test('Select by complex CSS selector', () => {
-        const headerLinks = $("header nav .link");
+        const headerLinks = all("header nav .link");
         assert(headerLinks.length === 1, 'Should find nested element');
       });
 
       await test('Index access works', () => {
-        assert($.menu[0].hasAttribute('menu'), 'First element should have menu attribute');
+        assert(all.menu[0].hasAttribute('menu'), 'First element should have menu attribute');
       });
 
       await test('Length property works', () => {
-        assert($.menu.length === 3, 'Length should match selected elements');
+        assert(all.menu.length === 3, 'Length should match selected elements');
       });
 
       await test('Empty selection returns empty collection', () => {
-        const nonexistent = $('nonexistent-element');
+        const nonexistent = all('nonexistent-element');
         assert(nonexistent.length === 0, 'Should return empty collection for no matches');
       });
 
       await test('Nested attribute selection works', () => {
-        const nestedLinks = $.link;
+        const nestedLinks = all.link;
         assert(nestedLinks.length === 3, 'Should find elements at different nesting levels');
       });
 
       await test('Context-based selection works', () => {
         const form = document.getElementById('test-form');
-        const requiredFields = $(form, '[required]');
+        const requiredFields = all(form, '[required]');
         assert(requiredFields.length === 3, 'Should find all required fields within form');
       });
 
       await test('Context-based selection with complex operations', () => {
         const form = document.getElementById('test-form');
-        const requiredElements = $(form, '[required]')
+        const requiredElements = all(form, '[required]')
           .filter(el => el.tagName === 'INPUT')  // Get only input elements
           .classList.add('test-required')     // Add a class
           .setAttribute('data-tested', 'true'); // Set an attribute
@@ -126,72 +126,72 @@
     const testArrayOperations = async () => {
       await test('forEach works', () => {
         let count = 0;
-        $.menu.forEach(() => count++);
+        all.menu.forEach(() => count++);
         assert(count === 3, 'forEach should iterate all elements');
       });
 
       await test('filter works', () => {
-        const filtered = $.menu.filter(el => el.hasAttribute('menu'));
+        const filtered = all.menu.filter(el => el.hasAttribute('menu'));
         assert(filtered.length === 2, 'filter should return new collection');
       });
 
       await test('map works', () => {
-        const texts = $.menu.map(el => el.textContent);
+        const texts = all.menu.map(el => el.textContent);
         assert(texts.length === 3, 'map should return array of values');
         assert(texts[0] === 'Menu 1', 'mapped values should be correct');
       });
 
       await test('spread operator works', () => {
-        const [...elements] = $.menu;
+        const [...elements] = all.menu;
         assert(elements.length === 3, 'spread should create array');
       });
 
       await test('some works', () => {
-        const hasMenu1 = $.menu.some(el => el.textContent === 'Menu 1');
+        const hasMenu1 = all.menu.some(el => el.textContent === 'Menu 1');
         assert(hasMenu1, 'some should find matching element');
       });
 
       await test('every works', () => {
-        const allMenus = $.menu.every(el => el.textContent.includes('Menu'));
+        const allMenus = all.menu.every(el => el.textContent.includes('Menu'));
         assert(allMenus, 'every should verify all elements match');
       });
 
       await test('find works', () => {
-        const menu2 = $.menu.find(el => el.textContent === 'Menu 2');
+        const menu2 = all.menu.find(el => el.textContent === 'Menu 2');
         assert(menu2.textContent === 'Menu 2', 'find should return matching element');
       });
     };
 
     const testDOMOperations = async () => {
       await test('classList operations work', () => {
-        $.menu.classList.add('test-class');
-        assert($.menu[0].classList.contains('test-class'), 'class should be added');
+        all.menu.classList.add('test-class');
+        assert(all.menu[0].classList.contains('test-class'), 'class should be added');
         
-        $.menu.classList.remove('test-class');
-        assert(!$.menu[0].classList.contains('test-class'), 'class should be removed');
+        all.menu.classList.remove('test-class');
+        assert(!all.menu[0].classList.contains('test-class'), 'class should be removed');
       });
 
       await test('style operations work', () => {
-        $.menu.style.color = 'red';
-        assert($.menu[0].style.color === 'red', 'style should be applied');
+        all.menu.style.color = 'red';
+        assert(all.menu[0].style.color === 'red', 'style should be applied');
       });
 
       await test('property setting works', () => {
         const testId = 'test-id';
-        $.menu.id = testId;
-        assert($.menu[0].id === testId, 'property should be set');
+        all.menu.id = testId;
+        assert(all.menu[0].id === testId, 'property should be set');
       });
 
       await test('property getting works', () => {
-        const ids = $.menu.id;
+        const ids = all.menu.id;
         assert(Array.isArray(ids), 'should return array of values');
         assert(ids.length === 3, 'should get all values');
       });
 
       await test('style multiple properties work', () => {
-        $.menu.style.color = 'blue';
-        $.menu.style.fontWeight = 'bold';
-        const firstElement = $.menu[0];
+        all.menu.style.color = 'blue';
+        all.menu.style.fontWeight = 'bold';
+        const firstElement = all.menu[0];
         assert(
           firstElement.style.color === 'blue' && 
           firstElement.style.fontWeight === 'bold',
@@ -200,21 +200,21 @@
       });
 
       await test('setAttribute works', () => {
-        $.menu.setAttribute('data-test', 'value');
-        assert($.menu[0].getAttribute('data-test') === 'value', 'setAttribute should work');
+        all.menu.setAttribute('data-test', 'value');
+        assert(all.menu[0].getAttribute('data-test') === 'value', 'setAttribute should work');
       });
 
       await test('getAttribute works', () => {
-        const values = $.menu.getAttribute('data-test');
+        const values = all.menu.getAttribute('data-test');
         assert(Array.isArray(values) && values[0] === 'value', 'getAttribute should return array of values');
       });
 
       await test('insertAdjacentHTML with multiple arguments works', () => {
-        $.menu
+        all.menu
           .insertAdjacentHTML('beforeend', '<span>test-content</span>');
         
         assert(
-          $.menu[0].lastElementChild.textContent === 'test-content',
+          all.menu[0].lastElementChild.textContent === 'test-content',
           'insertAdjacentHTML should work with position and content arguments'
         );
       });
@@ -244,29 +244,29 @@
         }
       };
 
-      $.use(testPlugin);
+      all.use(testPlugin);
 
       await test('Plugin properties work', () => {
-        assert($.menu.first.length === 1, 'first property should return single element');
-        assert($.menu.visible.length > 0, 'visible property should work');
+        assert(all.menu.first.length === 1, 'first property should return single element');
+        assert(all.menu.visible.length > 0, 'visible property should work');
       });
 
       await test('Nested plugin properties work', () => {
-        assert($.menu.special.first.length === 1, 'nested properties should work');
+        assert(all.menu.special.first.length === 1, 'nested properties should work');
       });
 
       await test('Plugin methods work', () => {
-        $.menu.flag();
-        assert($.menu[0].hasAttribute('flagged'), 'method should affect elements');
+        all.menu.flag();
+        assert(all.menu[0].hasAttribute('flagged'), 'method should affect elements');
       });
 
       await test('Plugin method chaining works', () => {
-        $.menu.flag().unflag();
-        assert(!$.menu[0].hasAttribute('flagged'), 'methods should be chainable');
+        all.menu.flag().unflag();
+        assert(!all.menu[0].hasAttribute('flagged'), 'methods should be chainable');
       });
 
       await test('Plugin property chaining works', () => {
-        const result = $.menu.special.first.flag();
+        const result = all.menu.special.first.flag();
         assert(
           result.length === 1 && 
           result[0].hasAttribute('flagged'),
@@ -277,7 +277,7 @@
 
     const testMethodChaining = async () => {
       await test('Complex chains work', () => {
-        const result = $.menu
+        const result = all.menu
           .filter(el => el.hasAttribute('menu'))
           .map(el => el.textContent)
           .filter(text => text.includes('1'));
@@ -287,22 +287,22 @@
       });
 
       await test('DOM operation chaining works', () => {
-        $.menu
+        all.menu
           .classList.add('chain-test')
           .classList.add('second-class');
           
         assert(
-          $.menu[0].classList.contains('chain-test') && 
-          $.menu[0].classList.contains('second-class'),
+          all.menu[0].classList.contains('chain-test') && 
+          all.menu[0].classList.contains('second-class'),
           'DOM operations should chain'
         );
       });
 
       await test('Mixed operation chaining works', () => {
-        $.menu.filter(el => el.hasAttribute('menu')).classList.add('test-chain');
-        $.menu.filter(el => el.hasAttribute('menu')).classList.add('xyz').style.color = 'red';
+        all.menu.filter(el => el.hasAttribute('menu')).classList.add('test-chain');
+        all.menu.filter(el => el.hasAttribute('menu')).classList.add('xyz').style.color = 'red';
         
-        const filteredElement = $.menu.filter(el => el.hasAttribute('menu'))[0];
+        const filteredElement = all.menu.filter(el => el.hasAttribute('menu'))[0];
         assert(
           filteredElement.classList.contains('test-chain') &&
           filteredElement.classList.contains('xyz') &&
@@ -312,7 +312,7 @@
       });
 
       await test('Deep chain with mixed operations and property access works', () => {
-        const result = $.menu
+        const result = all.menu
           .filter(el => el.hasAttribute('menu'))  // Get elements with menu attribute
           .map(el => el.textContent)              // Get their text content
           .filter(text => text.includes('Menu'))  // Filter those with "Menu"
@@ -324,23 +324,23 @@
       });
 
       await test('DOM operation chain with multiple intermediate properties works', () => {
-        $.menu
+        all.menu
           .filter(el => el.hasAttribute('menu'))
           .style.backgroundColor = 'blue';     // Set background
         
-        $.menu
+        all.menu
           .filter(el => el.hasAttribute('menu'))
           .classList.add('test1')              // Add first class
           .style.color = 'red';               // Set color
         
-        $.menu
+        all.menu
           .filter(el => el.hasAttribute('menu'))
           .classList
           .add('test2')                       // Add second class
           .dataset
           .testAttr = 'value';               // Set data attribute
 
-        const element = $.menu.filter(el => el.hasAttribute('menu'))[0];
+        const element = all.menu.filter(el => el.hasAttribute('menu'))[0];
         
         assert(
           element.style.backgroundColor === 'blue' && 
@@ -357,36 +357,36 @@
     const testEventHandling = async () => {
       await test('Event handler chaining works', () => {
         let clicked = false;
-        $.menu
+        all.menu
           .onclick(() => clicked = true)
           .style.color = 'red';
-        assert($.menu[0].style.color === 'red', 'Chain should continue after event binding');
+        assert(all.menu[0].style.color === 'red', 'Chain should continue after event binding');
       });
 
       await test('Multiple event handlers work', () => {
         let count = 0;
-        $.menu
+        all.menu
           .onclick(() => count++)
           .onclick(() => count++);
-        assert($.menu[0].onclick !== undefined, 'Event handler should be bound');
+        assert(all.menu[0].onclick !== undefined, 'Event handler should be bound');
       });
     };
 
     const testEmptyCollections = async () => {
       await test('Empty collection style operations are safe', () => {
-        const empty = $('nonexistent');
+        const empty = all('nonexistent');
         empty.style.color = 'red'; // Should not throw
         assert(empty.length === 0, 'Should remain empty collection');
       });
 
       await test('Empty collection method chains work', () => {
-        const empty = $('nonexistent');
+        const empty = all('nonexistent');
         const result = empty.filter(() => true).map(x => x).style.color = 'red';
         assert(empty.length === 0, 'Should safely chain on empty collection');
       });
 
       await test('Empty collection DOM method call no-ops', () => {
-        const empty = $('nonexistent');
+        const empty = all('nonexistent');
         // Calling a DOM method (replaceWith) on an empty collection should be a no-op
         const result = empty.replaceWith(document.createElement('div'));
         assert(result.length === 0, 'Calling replaceWith on an empty collection should return an empty collection');
@@ -395,64 +395,64 @@
 
     const testPropertyAccess = async () => {
       await test('Deep property access works', () => {
-        const colors = $.menu.style.backgroundColor;
+        const colors = all.menu.style.backgroundColor;
         assert(Array.isArray(colors), 'Should return array of values');
       });
 
       await test('Nonexistent property access is safe', () => {
-        const values = $.menu.nonexistentProp;
+        const values = all.menu.nonexistentProp;
         assert(Array.isArray(values) && values.every(v => v === undefined), 
           'Should return array of undefined values');
       });
 
       await test('Computed property access works', () => {
         const prop = 'id';
-        const ids = $.menu[prop];
+        const ids = all.menu[prop];
         assert(Array.isArray(ids), 'Should handle computed properties');
       });
     };
 
     const testPluginEdgeCases = async () => {
       await test('Plugin with empty properties works', () => {
-        $.use({ properties: {} });
+        all.use({ properties: {} });
         assert(true, 'Should not throw');
       });
 
       await test('Multiple plugins stack correctly', () => {
-        $.use({
+        all.use({
           properties: { test1: elements => elements }
         });
-        $.use({
+        all.use({
           properties: { test2: elements => elements }
         });
         assert(
-          $.menu.test1.length === 3 && 
-          $.menu.test2.length === 3,
+          all.menu.test1.length === 3 && 
+          all.menu.test2.length === 3,
           'Both plugins should work'
         );
       });
 
       await test('Plugin property shadowing works', () => {
-        $.use({
+        all.use({
           properties: {
             special: elements => [elements[0]]
           }
         });
-        assert($.menu.special.length === 1, 
+        assert(all.menu.special.length === 1, 
           'Latest plugin property should override previous');
       });
     };
 
     const testMethodReturns = async () => {
       await test('Method returning primitive chains correctly', () => {
-        const hasMenu = $.menu
+        const hasMenu = all.menu
           .some(el => el.hasAttribute('menu'));
         assert(typeof hasMenu === 'boolean', 
           'Should return primitive when appropriate');
       });
 
       await test('Mixed return value chain works', () => {
-        const result = $.menu
+        const result = all.menu
           .map(el => el.textContent)
           .filter(text => text.includes('Menu'))
           .length;
@@ -461,7 +461,7 @@
       });
     };
 
-    // Run $ tests
+    // Run all tests
     const runTests = async () => {
       document.getElementById('test-elements').classList.remove('hidden');
       

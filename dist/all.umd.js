@@ -1,16 +1,16 @@
 /*!
- * dollar v1.5.0
+ * all.js v1.5.0
  * (c) 2025 David Miranda
  * Released under the MIT License
  */
-var $ = (() => {
+var all = (() => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __export = (target, all) => {
-    for (var name in all)
-      __defProp(target, name, { get: all[name], enumerable: true });
+  var __export = (target, all2) => {
+    for (var name in all2)
+      __defProp(target, name, { get: all2[name], enumerable: true });
   };
   var __copyProps = (to, from, except, desc) => {
     if (from && typeof from === "object" || typeof from === "function") {
@@ -22,10 +22,10 @@ var $ = (() => {
   };
   var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-  // dollar.js
-  var dollar_exports = {};
-  __export(dollar_exports, {
-    default: () => dollar_default
+  // all.js
+  var all_exports = {};
+  __export(all_exports, {
+    default: () => all_default
   });
   var createMethodHandler = (elements, plugins, methods) => ({
     get(target, prop) {
@@ -225,6 +225,13 @@ var $ = (() => {
         const normalizedIndex = index < 0 ? this.length + index : index;
         return this[normalizedIndex] ? [this[normalizedIndex]] : [];
       },
+      at(index) {
+        if (typeof index !== "number") {
+          throw new TypeError("at() requires a number as an argument");
+        }
+        const normalizedIndex = index < 0 ? this.length + index : index;
+        return this[normalizedIndex];
+      },
       prop(properties) {
         if (typeof properties !== "object" || properties === null) {
           throw new TypeError("prop() requires an object of properties");
@@ -249,7 +256,7 @@ var $ = (() => {
       }
     }
   };
-  var $ = new Proxy(function(selectorOrElements, contextSelector) {
+  var all = new Proxy(function(selectorOrElements, contextSelector) {
     let elements = toElementArray(selectorOrElements);
     if (arguments.length === 2) {
       if (typeof contextSelector !== "string") {
@@ -286,8 +293,8 @@ var $ = (() => {
       return createElementProxy(elements);
     }
   });
-  $.use(defaultPlugins);
-  var dollar_default = $;
-  return __toCommonJS(dollar_exports);
+  all.use(defaultPlugins);
+  var all_default = all;
+  return __toCommonJS(all_exports);
 })();
-window.$ = $.default;
+window.all = all.default;

@@ -1,16 +1,16 @@
-# dollar
+# all.js
 
 A modern DOM manipulation library that feels like native JavaScript. Write cleaner code with an API that matches the actual DOM, while keeping the convenience of jQuery-style selections and chaining.
 
 ```javascript
 // jQuery
-$('.menu').addClass('active').css('background-color', 'blue');
+all('.menu').addClass('active').css('background-color', 'blue');
 
-// dollar - use the actual DOM API
-$.menu.classList.add('active').style.backgroundColor = 'blue';
+// all.js - use the actual DOM API
+all.menu.classList.add('active').style.backgroundColor = 'blue';
 ```
 
-## Why dollar?
+## Why all.js?
 
 - **Native DOM Methods**: Use `classList.add()` instead of `addClass()`, `style.backgroundColor` instead of `css()`
 - **Native Array Methods**: Native `map`, `filter`, `forEach` without `.each()` or `.toArray()`
@@ -22,10 +22,10 @@ $.menu.classList.add('active').style.backgroundColor = 'blue';
 
 ```javascript
 // jQuery way
-$('.items').filter('[data-enabled]').addClass('active').hide();
+all('.items').filter('[data-enabled]').addClass('active').hide();
 
-// dollar - just like vanilla JS
-$.items
+// all.js - just like vanilla JS
+all.items
   .filter(el => el.dataset.enabled)
   .classList.add('active')
   .style.display = 'none';
@@ -38,30 +38,30 @@ $.items
 // <div class="menu">Menu 2</div>
 
 // Selects both elements above
-$.menu.classList.add('active');
+all.menu.classList.add('active');
 ```
 
 ## Complex selectors
 
 ```javascript
-$('header [nav] > .link');
+all('header [nav] > .link');
 ```
 
 ## Real Arrays, Real DOM
 
 ```javascript
 // Find all expensive items and format their prices
-const expensiveItems = $.item
+const expensiveItems = all.item
   .filter(el => parseFloat(el.dataset.price) > 100)
   .map(el => ({
     name: el.textContent,
     price: `$${el.dataset.price}`
   }));
 
-const firstMenu = $.menu[0];
-const menuCount = $.menu.length;
+const firstMenu = all.menu[0];
+const menuCount = all.menu.length;
 
-for (const el of $.menu) {
+for (const el of all.menu) {
   console.log(el);
 }
 ```
@@ -70,15 +70,15 @@ for (const el of $.menu) {
 
 ```javascript
 // Chain methods that return elements
-$.menu
+all.menu
   .querySelector('.submenu')   // Returns element
   .cloneNode(true)            // Returns cloned element
   .classList.add('copy');     // Continues chaining
 
-// Chain with dollar objects
-const menu = $.menu;
-$.main.appendChild(menu);     // Accepts dollar objects directly
-$.sidebar.prepend($.nav);     // Works with all insertion methods
+// Chain with all.js objects
+const menu = all.menu;
+all.main.appendChild(menu);     // Accepts all.js objects directly
+all.sidebar.prepend(all.nav);     // Works with all insertion methods
 ```
 
 ## Function Property Assignment
@@ -87,23 +87,23 @@ Pass a function to any property to run it on each element. The function receives
 
 ```javascript
 // Conditional display
-$.item.style.display = el => 
+all.item.style.display = el => 
   el.dataset.active ? '' : 'none'
 
 // Dynamic colors
-$.item.style.color = el => 
+all.item.style.color = el => 
   el.dataset.priority === 'high' ? 'red' : 'black'
 
 // Set text based on data
-$.price.textContent = el => 
+all.price.textContent = el => 
   `$${el.dataset.amount}`
 
 // Class toggling
-$.item.className = el => 
+all.item.className = el => 
   el.dataset.enabled ? 'active enabled' : 'disabled'
 
 // Inline search/filter
-<input oninput="$.item.style.display = el =>
+<input oninput="all.item.style.display = el =>
   !this.value || el.textContent.includes(this.value) ? '' : 'none'"
 >
 ```
@@ -114,14 +114,14 @@ This lets you write concise code that automatically applies functions to each el
 
 ```javascript
 // jQuery
-$('.menu').on('click', function(e) {
-  $(this).addClass('clicked');
+all('.menu').on('click', function(e) {
+  all(this).addClass('clicked');
 }).on('mouseenter', function(e) {
-  $(this).addClass('hover');
+  all(this).addClass('hover');
 });
 
-// dollar
-$.menu
+// all.js
+all.menu
   .onclick(e => e.target.classList.add('clicked'))
   .onmouseenter(e => e.target.classList.add('hover'));
 ```
@@ -130,12 +130,12 @@ $.menu
 
 ```javascript
 // Delegate clicks on .button elements within .menu
-$.menu.onclick('.button', e => {
+all.menu.onclick('.button', e => {
   console.log('Button clicked', e.target);
 });
 
 // Multiple delegated handlers with object syntax
-$.menu.onclick({
+all.menu.onclick({
   '.button': e => console.log('Button clicked'),
   '.link': e => console.log('Link clicked')
 });
@@ -143,21 +143,21 @@ $.menu.onclick({
 
 ## Built-in Plugins
 
-dollar includes several default plugins for common operations:
+all.js includes several default plugins for common operations:
 
 ```javascript
 // Element selection
-$.menu.eq(0)           // Get first menu element
-$.menu.eq(-1)          // Get last menu element
+all.menu.eq(0)           // Get first menu element
+all.menu.eq(-1)          // Get last menu element
 
 // Bulk property setting
-$.button.prop({
+all.button.prop({
   disabled: true,
   type: 'submit'
 })
 
 // jQuery-style CSS
-$.item.css({
+all.item.css({
   backgroundColor: 'blue',
   marginTop: '10px'
 })
@@ -171,10 +171,10 @@ Turn complex interactions into concise one-liners that are easy to understand an
 
 ```html
 <!-- Toggle all panels with one click -->
-<button onclick="$.panel.classList.toggle('active')">Toggle Panels</button>
+<button onclick="all.panel.classList.toggle('active')">Toggle Panels</button>
 
 <!-- Toggle with custom class -->
-<button onclick="$.section.classList.toggle('expanded')">Expand All</button>
+<button onclick="all.section.classList.toggle('expanded')">Expand All</button>
 ```
 
 ### Live Search/Filtering
@@ -183,7 +183,7 @@ Turn complex interactions into concise one-liners that are easy to understand an
 <input 
   type="search" 
   placeholder="Search items..."
-  oninput="$.item.style.display = 
+  oninput="all.item.style.display = 
     el => !this.value || 
     el.textContent.toLowerCase().includes(this.value.toLowerCase())
       ? ''
@@ -195,9 +195,9 @@ Turn complex interactions into concise one-liners that are easy to understand an
   type="search" 
   placeholder="Search and highlight..."
   oninput="
-    $.item.classList.remove('highlight');
+    all.item.classList.remove('highlight');
     if (this.value) {
-      $.item
+      all.item
         .filter(el => el.textContent.toLowerCase().includes(this.value.toLowerCase()))
         .classList.add('highlight')
     }
@@ -210,7 +210,7 @@ Turn complex interactions into concise one-liners that are easy to understand an
 <!-- Validate required fields on submit -->
 <form novalidate onsubmit="
   event.preventDefault();
-  const invalid = $(this, '[required]').filter(el => !el.value);
+  const invalid = all(this, '[required]').filter(el => !el.value);
   invalid.classList.add('error');
   if (invalid.length === 0) {
     this.submit();
@@ -228,7 +228,7 @@ Turn complex interactions into concise one-liners that are easy to understand an
 <!-- Update multiple prices based on plan selection -->
 <div>
   <select onchange="
-    $(this.parentElement, '[data-price]').textContent = 
+    all(this.parentElement, '[data-price]').textContent = 
       this.options[this.selectedIndex].dataset.price
   ">
     <option data-price="$10/mo">Basic</option>
@@ -241,7 +241,7 @@ Turn complex interactions into concise one-liners that are easy to understand an
 <!-- Update counters -->
 <div>
   <button onclick="
-    $.counter.textContent = Number($.counter[0].textContent) + 1
+    all.counter.textContent = Number(all.counter[0].textContent) + 1
   ">Increment All</button>
   <span counter>0</span>
 </div>
@@ -258,9 +258,9 @@ Turn complex interactions into concise one-liners that are easy to understand an
 
 <div>
   <button onclick="
-    $.card.classList.toggle('expanded');
+    all.card.classList.toggle('expanded');
     this.textContent = 
-      $.card[0].classList.contains('expanded') ? 
+      all.card[0].classList.contains('expanded') ? 
         'Collapse All' : 'Expand All'
   ">Expand All</button>
   
@@ -295,47 +295,47 @@ const visibilityPlugin = {
 };
 
 // Use plugin
-$.use(visibilityPlugin);
+all.use(visibilityPlugin);
 
 // Natural usage
-$.menu.visible.show().onclick(e => console.log('clicked'));
+all.menu.visible.show().onclick(e => console.log('clicked'));
 ```
 
 ## Advanced Chaining
 
-dollar intelligently handles method return values:
+all.js intelligently handles method return values:
 - Methods returning Elements (like `cloneNode`) → Continue chaining
 - Methods returning undefined (like `removeAttribute`) → Continue chaining
 - Methods returning other values (like `getAttribute`) → Return value array
 
 ```javascript
 // Methods returning Elements chain automatically
-$.menu
+all.menu
   .cloneNode(true)      // Returns Element
   .classList.add('copy');
 
 // Methods returning undefined continue the chain
-$.button
+all.button
   .removeAttribute('disabled')  // Returns undefined
   .classList.add('active');     // Chaining continues
 
 // Get actual return values when needed
-const ids = $.item.map(el => el.id);
-const hasClass = $.menu.classList.contains('active');
+const ids = all.item.map(el => el.id);
+const hasClass = all.menu.classList.contains('active');
 ```
 
-## Working with dollar Objects
+## Working with all.js Objects
 
-dollar objects can be used as arguments to DOM methods:
+all.js objects can be used as arguments to DOM methods:
 
 ```javascript
-// Pass dollar objects directly to DOM methods
-$.main.appendChild($.sidebar);
-$.nav.insertBefore($.header, $.main);
+// Pass all.js objects directly to DOM methods
+all.main.appendChild(all.sidebar);
+all.nav.insertBefore(all.header, all.main);
 
 // Works with any method accepting Elements
-$.menu.replaceWith($.nav);
-$.section.after($.footer);
+all.menu.replaceWith(all.nav);
+all.section.after(all.footer);
 ```
 
 ## Installation
@@ -343,62 +343,62 @@ $.section.after($.footer);
 npm
 
 ```bash
-npm install dollar
+npm install alldom
 ```
 
 umd (browser)
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@panphora/dollar@1.5.0/dist/dollar.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alldom@1.5.0/dist/all.umd.min.js"></script>
 ```
 
 esm (browser)
 
 ```html
 <script type="module">
-  import $ from 'https://cdn.jsdelivr.net/npm/@panphora/dollar@1.5.0/dist/dollar.esm.min.js';
+  import all from 'https://cdn.jsdelivr.net/npm/alldom@1.5.0/dist/all.esm.min.js';
 </script>
 ```
 
 ## Getting Started
 
-### Get productive with dollar in under 5 minutes
+### Get productive with all.js in under 5 minutes
 
 ```javascript
 // 1. Basic Selection
 // Select elements just like you would with querySelectorAll
-$.menu                     // <div menu>, <div class="menu">
-$('button')               // <button>
-$('.items')               // elements with 'items' class
-$('[data-enabled]')       // elements with data-enabled attribute
-$('ul > li')              // direct child selectors work too
+all.menu                     // <div menu>, <div class="menu">
+all('button')               // <button>
+all('.items')               // elements with 'items' class
+all('[data-enabled]')       // elements with data-enabled attribute
+all('ul > li')              // direct child selectors work too
 
 // 2. Modifying Elements
 // Use regular DOM properties with automatic chaining
-$.menu
+all.menu
   .classList.add('active')         // add a class
   .style.backgroundColor = 'blue'  // set styles directly
 
 // 3. Filtering
 // Use native array methods - no special jQuery syntax
-$.item
+all.item
   .filter(el => el.dataset.enabled)    // only enabled items
   .map(el => el.textContent)           // get text content
   .forEach(text => console.log(text))  // do something with each
 
 // 4. Event Handling
 // Simple event binding with automatic 'this' handling
-$.button
+all.button
   .onclick(e => e.target.classList.add('clicked'))
   .onmouseenter(e => e.target.classList.add('hover'))
 
 // 5. Context Selection
 // Search within specific elements
-$('.sidebar', '.item')    // items inside sidebar
-$(menuElement, 'button')  // buttons inside menu element
+all('.sidebar', '.item')    // items inside sidebar
+all(menuElement, 'button')  // buttons inside menu element
 
 // 6. Working with Forms
-$('form')
+all('form')
   .onsubmit(e => {
     e.preventDefault()
     const data = new FormData(e.target)
@@ -406,55 +406,55 @@ $('form')
   })
 
 // 7. Array-like Features
-$.item.length             // get count
-$.item[0]                 // get first element
-for (const el of $.item)  // iteration works
-[...$.item]              // spread into array
+all.item.length             // get count
+all.item[0]                 // get first element
+for (const el of all.item)  // iteration works
+[...all.item]              // spread into array
 ```
 
 ### Common Patterns
 
 ```javascript
 // Toggle visibility of elements
-$.panel.style.display = 'none'     // hide all panels
-$.panel.style.display = ''         // show all panels
+all.panel.style.display = 'none'     // hide all panels
+all.panel.style.display = ''         // show all panels
 
 // Add/remove multiple classes
-$.menu.classList.add('active', 'visible')
-$.menu.classList.remove('loading', 'disabled')
+all.menu.classList.add('active', 'visible')
+all.menu.classList.remove('loading', 'disabled')
 
 // Filter and modify
-$.item
+all.item
   .filter(el => el.dataset.category === 'featured')
   .classList.add('highlighted')
 
 // Finding elements
-const activeItems = $.item.filter(el => el.classList.contains('active'))
-const firstEnabled = $.item.find(el => el.dataset.enabled)
-const hasDisabled = $.item.some(el => el.disabled)
+const activeItems = all.item.filter(el => el.classList.contains('active'))
+const firstEnabled = all.item.find(el => el.dataset.enabled)
+const hasDisabled = all.item.some(el => el.disabled)
 
 // Get/set attributes
-$.button.setAttribute('aria-expanded', 'true')
-const ids = $.item.map(el => el.id)
+all.button.setAttribute('aria-expanded', 'true')
+const ids = all.item.map(el => el.id)
 
 // Working with data attributes
-$.user.dataset.status = 'online'   // set data-status="online"
-const roles = $.user.map(el => el.dataset.role)
+all.user.dataset.status = 'online'   // set data-status="online"
+const roles = all.user.map(el => el.dataset.role)
 ```
 
 ### Common mistakes
 
 ```javascript
 // ❌ Don't try to chain after assignment
-$.menu.style.color = 'blue'
+all.menu.style.color = 'blue'
   .classList.add('active')
 
 // ✅ Do - separate statements
-$.menu.classList.add('active')
-$.menu.style.color = 'blue'
+all.menu.classList.add('active')
+all.menu.style.color = 'blue'
 
 // ✅ or use forEach
-$.menu.forEach(el => {
+all.menu.forEach(el => {
   el.classList.add('active')
   el.style.color = 'blue'
 })
@@ -467,7 +467,7 @@ Works in all modern browsers with ES6+ support. No polyfills needed, no legacy b
 ## Size Comparison
 
 - jQuery: 30KB minified + gzipped
-- dollar: 1KB minified + gzipped
+- all.js: 1KB minified + gzipped
 
 ## How it's worse than jQuery
 

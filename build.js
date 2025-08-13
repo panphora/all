@@ -1,15 +1,16 @@
 import * as esbuild from 'esbuild';
-import pkg from './package.json' assert { type: 'json' };
+import { readFileSync } from 'fs';
+const pkg = JSON.parse(readFileSync('./package.json', 'utf8'));
 
 const banner = `/*!
- * dollar v${pkg.version}
+ * all.js v${pkg.version}
  * (c) ${new Date().getFullYear()} ${pkg.author}
  * Released under the MIT License
  */`;
 
 // Shared settings
 const baseConfig = {
-  entryPoints: ['dollar.js'],
+  entryPoints: ['all.js'],
   banner: { js: banner },
   bundle: true,
   target: 'es2018',
@@ -21,34 +22,34 @@ const builds = [
   {
     ...baseConfig,
     format: 'esm',
-    outfile: 'dist/dollar.esm.js',
+    outfile: 'dist/all.esm.js',
     minify: false,
   },
   {
     ...baseConfig,
     format: 'esm',
-    outfile: 'dist/dollar.esm.min.js',
+    outfile: 'dist/all.esm.min.js',
     minify: true,
   },
   // IIFE builds
   {
     ...baseConfig,
     format: 'iife',
-    globalName: '$',
+    globalName: 'all',
     footer: {
-      js: 'window.$ = $.default;'  // Export the default export as window.$
+      js: 'window.all = all.default;'  // Export the default export as window.all
     },
-    outfile: 'dist/dollar.umd.js',
+    outfile: 'dist/all.umd.js',
     minify: false,
   },
   {
     ...baseConfig,
     format: 'iife',
-    globalName: '$',
+    globalName: 'all',
     footer: {
-      js: 'window.$ = $.default;'  // Export the default export as window.$
+      js: 'window.all = all.default;'  // Export the default export as window.all
     },
-    outfile: 'dist/dollar.umd.min.js',
+    outfile: 'dist/all.umd.min.js',
     minify: true,
   },
 ];

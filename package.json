@@ -1,17 +1,17 @@
 {
-  "name": "@panphora/dollar",
+  "name": "alldom",
   "version": "1.5.0",
-  "description": "A modern DOM manipulation library that feels like native JavaScript",
-  "homepage": "https://github.com/panphora/dollar",
+  "description": "A modern DOM manipulation library that selects all elements naturally with native JavaScript feel",
+  "homepage": "https://github.com/panphora/all",
   "type": "module",
-  "main": "dist/dollar.umd.js",
-  "module": "dist/dollar.esm.js",
-  "unpkg": "dist/dollar.umd.min.js",
-  "jsdelivr": "dist/dollar.umd.min.js",
+  "main": "dist/all.umd.js",
+  "module": "dist/all.esm.js",
+  "unpkg": "dist/all.umd.min.js",
+  "jsdelivr": "dist/all.umd.min.js",
   "exports": {
     ".": {
-      "import": "./dist/dollar.esm.js",
-      "require": "./dist/dollar.umd.js"
+      "import": "./dist/all.esm.js",
+      "require": "./dist/all.umd.js"
     }
   },
   "files": [

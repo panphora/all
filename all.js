@@ -116,7 +116,7 @@ const createMethodHandler = (elements, plugins, methods) => ({
     // - When a method returns an Element (like cloneNode), it wraps it in a proxy
     // - When a method returns undefined (like removeAttribute), it chains on the original elements
     // - For other return values, like strings, it returns the results in an array
-    // We also handle passing in a $-wrapped proxy object as an argument and loop over all elements in it
+    // We also handle passing in an all-wrapped proxy object as an argument and loop over all elements in it
 // In the method handler's get function, replace the function call handling with:
 if (typeof value === 'function') {
   return (...args) => {
@@ -254,7 +254,16 @@ const defaultPlugins = {
       const normalizedIndex = index < 0 ? this.length + index : index;
       
       // Return array with single element at index, or empty array if index is invalid
+      // ❗️ Allows chaining to continue
       return this[normalizedIndex] ? [this[normalizedIndex]] : [];
+    },
+
+    at(index) {
+      if (typeof index !== 'number') {
+        throw new TypeError('at() requires a number as an argument');
+      }
+      const normalizedIndex = index < 0 ? this.length + index : index;
+      return this[normalizedIndex];
     },
 
     prop(properties) {
@@ -287,7 +296,7 @@ const defaultPlugins = {
   }
 };
 
-const $ = new Proxy(function(selectorOrElements, contextSelector) {
+const all = new Proxy(function(selectorOrElements, contextSelector) {
   // First normalize the elements from the first argument
   let elements = toElementArray(selectorOrElements);
   
@@ -329,6 +338,6 @@ const $ = new Proxy(function(selectorOrElements, contextSelector) {
 });
 
 // Install default plugins
-$.use(defaultPlugins);
+all.use(defaultPlugins);
 
-export default $;
+export default all;
