@@ -1,16 +1,16 @@
 /*!
- * all.js v1.5.0
+ * All.js v1.6.0
  * (c) 2025 David Miranda
  * Released under the MIT License
  */
-var all = (() => {
+var All = (() => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __export = (target, all2) => {
-    for (var name in all2)
-      __defProp(target, name, { get: all2[name], enumerable: true });
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
   };
   var __copyProps = (to, from, except, desc) => {
     if (from && typeof from === "object" || typeof from === "function") {
@@ -256,7 +256,7 @@ var all = (() => {
       }
     }
   };
-  var all = new Proxy(function(selectorOrElements, contextSelector) {
+  var All = new Proxy(function(selectorOrElements, contextSelector) {
     let elements = toElementArray(selectorOrElements);
     if (arguments.length === 2) {
       if (typeof contextSelector !== "string") {
@@ -293,8 +293,8 @@ var all = (() => {
       return createElementProxy(elements);
     }
   });
-  all.use(defaultPlugins);
-  var all_default = all;
+  All.use(defaultPlugins);
+  var all_default = All;
   return __toCommonJS(all_exports);
 })();
-window.all = all.default;
+window.All = All.default;

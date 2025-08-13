@@ -1,5 +1,5 @@
 /*!
- * all.js v1.5.0
+ * All.js v1.6.0
  * (c) 2025 David Miranda
  * Released under the MIT License
  */
@@ -234,7 +234,7 @@ var defaultPlugins = {
     }
   }
 };
-var all = new Proxy(function(selectorOrElements, contextSelector) {
+var All = new Proxy(function(selectorOrElements, contextSelector) {
   let elements = toElementArray(selectorOrElements);
   if (arguments.length === 2) {
     if (typeof contextSelector !== "string") {
@@ -271,8 +271,8 @@ var all = new Proxy(function(selectorOrElements, contextSelector) {
     return createElementProxy(elements);
   }
 });
-all.use(defaultPlugins);
-var all_default = all;
+All.use(defaultPlugins);
+var all_default = All;
 export {
   all_default as default
 };

@@ -3,7 +3,7 @@ import { readFileSync } from 'fs';
 const pkg = JSON.parse(readFileSync('./package.json', 'utf8'));
 
 const banner = `/*!
- * all.js v${pkg.version}
+ * All.js v${pkg.version}
  * (c) ${new Date().getFullYear()} ${pkg.author}
  * Released under the MIT License
  */`;
@@ -35,9 +35,9 @@ const builds = [
   {
     ...baseConfig,
     format: 'iife',
-    globalName: 'all',
+    globalName: 'All',
     footer: {
-      js: 'window.all = all.default;'  // Export the default export as window.all
+      js: 'window.All = All.default;'  // Export the default export as window.All
     },
     outfile: 'dist/all.umd.js',
     minify: false,
@@ -45,9 +45,9 @@ const builds = [
   {
     ...baseConfig,
     format: 'iife',
-    globalName: 'all',
+    globalName: 'All',
     footer: {
-      js: 'window.all = all.default;'  // Export the default export as window.all
+      js: 'window.All = All.default;'  // Export the default export as window.All
     },
     outfile: 'dist/all.umd.min.js',
     minify: true,

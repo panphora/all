@@ -1,6 +1,12 @@
 # Changelog
 
-## Library Renamed to all.js
+## v1.6.0 - Library Renamed to All.js
+- **BREAKING CHANGE**: Library renamed from "all" to "All" to avoid conflict with `document.all`
+- API changed from `all` to `All` (e.g., `All.menu` instead of `all.menu`)
+- Published as `alldom` on npm (same package name)
+- All functionality remains exactly the same, only the global variable name changes
+
+## v1.5.0 - Library Renamed to all.js
 - **BREAKING CHANGE**: Library renamed from "dollar" to "all.js"
 - API changed from `$` to `all` (e.g., `all.menu` instead of `$.menu`)
 - Published as `alldom` on npm
@@ -10,4 +16,4 @@
 - Added event delegation with object-based binding capabilities
 - Introduced built-in plugins: `eq()`, `prop()`, `css()`
 - Enhanced method chaining, so all methods that return DOM nodes chain
-- Automatically unwrap proxy arguments when passed as args (e.g. `.prepend(all.menu)`)
+- Automatically unwrap proxy arguments when passed as args (e.g. `.prepend(All.menu)`)

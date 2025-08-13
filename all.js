@@ -296,7 +296,7 @@ const defaultPlugins = {
   }
 };
 
-const all = new Proxy(function(selectorOrElements, contextSelector) {
+const All = new Proxy(function(selectorOrElements, contextSelector) {
   // First normalize the elements from the first argument
   let elements = toElementArray(selectorOrElements);
   
@@ -338,6 +338,6 @@ const all = new Proxy(function(selectorOrElements, contextSelector) {
 });
 
 // Install default plugins
-all.use(defaultPlugins);
+All.use(defaultPlugins);
 
-export default all;
+export default All;
